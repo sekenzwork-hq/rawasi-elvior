@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+@import "tailwindcss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #040200;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* ─── PAGE WRAPPER ─── */
+.page-wrap {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #040200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── GRAIN TEXTURE ─── */
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── TOP GOLDEN SPOTLIGHT ─── */
+.spotlight {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(235, 182, 55, 0.42) 0%,
+    rgba(210, 150, 35, 0.22) 25%,
+    rgba(170, 110, 20, 0.08) 50%,
+    transparent 70%
+  );
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── FLOOR AMBIENT GLOWS ─── */
+.floor-glow-left {
+  position: absolute;
+  left: -8%;
+  bottom: -8%;
+  width: 48%;
+  height: 58%;
+  background: radial-gradient(circle, rgba(140, 90, 20, 0.2) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 2;
+}
+.floor-glow-right {
+  position: absolute;
+  right: -8%;
+  bottom: -8%;
+  width: 48%;
+  height: 58%;
+  background: radial-gradient(circle, rgba(165, 110, 28, 0.16) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── SMOKE — Pure CSS Rising Fog ─── */
+
+/*
+  Each .smoke-side is a fixed column anchored to the bottom corner.
+  Inside it, individual .puff elements rise, drift sideways, expand,
+  and fade out — staggered so the motion feels continuous and organic.
+*/
+
+.smoke-side {
+  position: absolute;
+  bottom: 0;
+  width: 320px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.smoke-side--left  { left: 0; }
+.smoke-side--right { right: 0; transform: scaleX(-1); }
+
+/* ─── Each puff ─── */
+.puff {
+  position: absolute;
+  bottom: -120px;
+  border-radius: 50%;
+  filter: blur(38px);
+  opacity: 0;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(200, 118, 18, 0.55) 0%,
+    rgba(175,  95,  8, 0.30) 35%,
+    rgba(130,  65,  0, 0.10) 60%,
+    transparent 80%
+  );
+  animation: puffRise var(--dur) var(--ease) var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+/* Individual puff sizes & horizontal positions */
+.puff--1 { width: 260px; height: 260px; left:  10px; --dur: 11s; --delay: 0s;    --ease: ease-in-out; --drift:  30px; --rot:  8deg; }
+.puff--2 { width: 200px; height: 200px; left:  60px; --dur: 13s; --delay: 1.8s;  --ease: ease-in;     --drift: -20px; --rot: -5deg; }
+.puff--3 { width: 300px; height: 300px; left: -30px; --dur: 15s; --delay: 3.5s;  --ease: ease-in-out; --drift:  50px; --rot: 12deg; }
+.puff--4 { width: 180px; height: 180px; left:  90px; --dur: 10s; --delay: 5.2s;  --ease: ease-in;     --drift: -35px; --rot: -9deg; }
+.puff--5 { width: 240px; height: 240px; left:  20px; --dur: 14s; --delay: 7.0s;  --ease: ease-in-out; --drift:  15px; --rot:  4deg; }
+.puff--6 { width: 160px; height: 160px; left:  70px; --dur: 12s; --delay: 9.5s;  --ease: ease-in;     --drift: -45px; --rot:-14deg; }
+
+@keyframes puffRise {
+  0% {
+    opacity: 0;
+    transform: translateY(0)       translateX(0)           rotate(0deg)    scale(0.6);
+  }
+  10% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateY(-38vh)   translateX(calc(var(--drift) * 0.5))  rotate(calc(var(--rot) * 0.5)) scale(1.25);
+  }
+  85% {
+    opacity: 0.12;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-92vh)   translateX(var(--drift)) rotate(var(--rot))          scale(1.7);
+  }
+}
+
+/* ─── CONTENT ─── */
+.content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  user-select: none;
+}
+
+/* ─── LOGO ─── */
+.logo-wrap {
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 28px rgba(185, 130, 40, 0.3));
+}
+
+.logo-img {
+  width: 150px;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px)  { .logo-img { width: 170px; } }
+@media (min-width: 768px)  { .logo-img { width: 195px; } }
+@media (min-width: 1024px) { .logo-img { width: 220px; } }
+
+/* ─── BRAND NAME ─── */
+.brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  background: linear-gradient(180deg, #fbf4cc 0%, #dfb56c 50%, #b27c2c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── LUXURY PERFUMES DIVIDER ─── */
+.divider-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 76px;
+  opacity: 0.92;
+}
+
+.div-line {
+  height: 1px;
+  flex: 1;
+  max-width: 60px;
+}
+
+.div-line-l { background: linear-gradient(to right, transparent, #c89a4a); }
+.div-line-r { background: linear-gradient(to left,  transparent, #c89a4a); }
+
+.div-label {
+  color: #d6b472;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ─── MAIN HEADLINE ─── */
+.headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 10.5vw, 118px);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin-bottom: 26px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6e1a6 38%, #d5ae67 72%, #a87222 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.7));
+}
+
+/* ─── DIAMOND ORNAMENT ─── */
+.ornament-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 20px;
+  opacity: 0.88;
+}
+
+.orn-line {
+  height: 1px;
+  flex: 1;
+}
+
+.orn-line-l { background: linear-gradient(to right, transparent, #9b6a28); }
+.orn-line-r { background: linear-gradient(to left,  transparent, #9b6a28); }
+
+.orn-diamond {
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  border: 1px solid #c89a4a;
+  background: #090603;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.orn-dot {
+  width: 4px;
+  height: 4px;
+  background: #c89a4a;
+  transform: rotate(-45deg);
+}
+
+/* ─── TAGLINE ─── */
+.tagline {
+  color: rgba(202, 165, 102, 0.9);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 500;
+  max-width: 500px;
+  line-height: 1.7;
+}
